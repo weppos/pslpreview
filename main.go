@@ -10,6 +10,11 @@ import (
 	"github.com/weppos/publicsuffix-go/publicsuffix"
 )
 
+var (
+	// Version is replaced at compilation time
+	Version string
+)
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -22,6 +27,8 @@ func main() {
 
 func PreviewServer(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v", r.URL)
+
+	w.Header().Set("X-Version", Version)
 
 	query := r.URL.Query()
 	var value string
@@ -72,7 +79,7 @@ type PreviewResult struct {
 type PreviewDomain struct {
 	ETLD        string
 	ETLDPlusOne string
-	Rule string
+	Rule        string
 }
 
 func newPreviewDomainFromPublicSuffix(d *publicsuffix.DomainName) *PreviewDomain {
